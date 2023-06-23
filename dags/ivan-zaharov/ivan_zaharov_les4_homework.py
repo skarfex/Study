@@ -86,3 +86,4 @@ with DAG("ivan_zaharov_les4_homework",
     ) # Python Operator - считывает данные из таблицы greenplum
 
     dummy >> echo_ds >> check_day_is_not_sunday >> read_greenplum_table
+    
