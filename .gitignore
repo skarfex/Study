@@ -1,1 +1,22 @@
-errors.txt
+**/*.log
+**/.DS_Store
+**/.Trashes
+**/*.code-workspace
+**/*.idea
+*.pyc
+__pycache__/
+*.swp
+**/*.env
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+**/Pipfile.lock
+/venv/
+karpov_bigdata/homework_practice/practice2/*.csv
+/practice4/jars/mysql-connector-java-8.0.25.jar
+output
+
+karpov_bigdata/homework_practice/practice4/result*+
+pkarpov_bigdata/ractice5/output_report/
+karpov_bigdata/practice5/streaming-job-checkpoint*/

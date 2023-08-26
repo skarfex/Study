@@ -1,0 +1,1 @@
+from .ram_plugin import RickandmortyOperator, RickandmortyTopLocsOperator

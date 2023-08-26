@@ -1,0 +1,60 @@
+"""
+Тестовый даг, копипаст,
+"""
+
+from airflow import DAG
+from airflow.utils.dates import days_ago
+import logging
+
+from airflow.operators.dummy import DummyOperator
+from airflow.operators.bash import BashOperator
+from airflow.operators.python_operator import PythonOperator
+
+
+DEFAULT_ARGS = {
+    'start_date': days_ago(2),
+    'owner': 'p-valitov-13',
+    'poke_interval': 600
+}
+
+with DAG("pv_test",
+          schedule_interval='@daily',
+          default_args=DEFAULT_ARGS,
+          max_active_runs=1,
+          tags=['p-valitov-13']
+          ) as dag:
+
+    dummy = DummyOperator(task_id='dummy')
+
+    echo_ds = BashOperator(
+        task_id='echo_ds',
+        bash_command='echo {{ ds }}',
+        dag=dag
+    )
+
+    def hello_world_func():
+        logging.info("First log")
+
+    hello_world = PythonOperator(
+        task_id='hello_world',
+        python_callable=hello_world_func,
+        dag=dag
+    )
+
+    def second_func():
+        logging.info("Second log")
+
+    second_task = PythonOperator(
+        task_id='second_task',
+        python_callable=second_func,
+        dag=dag
+    )
+
+    dummy >> [echo_ds, hello_world]
+
+
+
+
+
+
+

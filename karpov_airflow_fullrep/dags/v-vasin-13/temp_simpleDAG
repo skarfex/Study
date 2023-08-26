@@ -1,0 +1,69 @@
+"""
+Простой DAG
+DummyOperator для теста (deprecated btw)
+BashOperator выводит красивую пирамидку таблицы умножения
+PythonOperator выводит гуся в чат работягам
+"""
+
+from airflow import DAG
+from airflow.utils.dates import days_ago
+import logging
+import requests
+import json
+
+from airflow.operators.python_operator import PythonOperator
+from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.bash_operator import BashOperator
+from datetime import datetime
+
+geese_str = """
+ЗАПУСКАЕМ
+░ГУСЯ░▄▀▀▀▄░РАБОТЯГИ░░
+▄███▀░◐░░░▌░░░░░░░
+░░░░▌░░░░░▐░░░░░░░
+░░░░▐░░░░░▐░░░░░░░
+░░░░▌░░░░░▐▄▄░░░░░
+░░░░▌░░░░▄▀▒▒▀▀▀▀▄
+░░░▐░░░░▐▒▒▒▒▒▒▒▒▀▀▄
+░░░▐░░░░▐▄▒▒▒▒▒▒▒▒▒▒▀▄
+░░░░▀▄░░░░▀▄▒▒▒▒▒▒▒▒▒▒▀▄
+░░░░░░▀▄▄▄▄▄█▄▄▄▄▄▄▄▄▄▄▄▀▄
+░░░░░░░░░░░▌▌▌▌░░░░░
+░░░░░░░░░░░▌▌░▌▌░░░░░
+░░░░░░░░░▄▄▌▌▄▌▌░░░░░
+запускаем гуся работяги
+"""
+
+DEFAULT_ARGS = {
+    'start_date': days_ago(2),
+    'owner': 'v-vasin-13',
+    'poke_interval': 600
+}
+
+dag = DAG(
+        "VVV_simpleDAG_v1",
+        schedule_interval='0 0 * * 1-6',
+        default_args=DEFAULT_ARGS,
+        max_active_runs=8,
+        tags=['v-vasin-13']
+        )
+
+dummy = DummyOperator(
+        task_id='dummy',
+        dag=dag
+        )
+
+echo_squares = BashOperator(
+        task_id='squares',
+        bash_command='for i in {1..12}; do for j in $(seq 1 $i); do echo -ne $iÃ—$j=$((i*j))\\t;done; echo;done ',
+        dag=dag
+        )
+
+def geeseEcho_func():
+    logging.info(geese_str)
+
+geese = PythonOperator(
+        task_id='geeseForWorkers',
+        python_callable=geeseEcho_func,
+        dag=dag
+        )
